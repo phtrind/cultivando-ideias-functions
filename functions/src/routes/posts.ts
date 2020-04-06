@@ -57,11 +57,11 @@ const getTranslation = (
   if (requestedLanguage) {
     language = requestedLanguage;
   }
-  const translation = translations.filter((x) => x.language === language);
-  if (translation && translation.length > 0) {
-    return translation[0].data;
+  const foundTranslation = translations.filter((x) => x.language === language);
+  if (foundTranslation && foundTranslation.length > 0) {
+    return foundTranslation[0].data;
   }
-  return translation[0].data;
+  return translations[0].data;
 };
 
 module.exports = router;
