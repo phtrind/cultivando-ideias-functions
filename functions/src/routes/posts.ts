@@ -1,5 +1,7 @@
 import * as admin from "firebase-admin";
+
 import PostSummary from "../models/post_summary";
+import Translation from "../models/translation";
 
 const firestore = admin.firestore();
 
