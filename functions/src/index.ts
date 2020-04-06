@@ -1,8 +1,14 @@
-import * as functions from 'firebase-functions';
+import * as admin from "firebase-admin";
+import * as functions from "firebase-functions";
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+const serviceAccount = require("./../../../cultivando-ideias-0e2e6b9341e9.json");
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+// admin.initializeApp();
+
+import { server } from "./server";
+
+const api = functions.https.onRequest(server);
+
+module.exports = {
+  api,
+};
