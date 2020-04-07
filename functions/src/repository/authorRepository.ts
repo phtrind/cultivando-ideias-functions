@@ -17,7 +17,7 @@ export default class AuthorRepository {
 
     return new Author(
       id,
-      snapshot.get("author.name"),
+      snapshot.get("name"),
       TranslationService.getTranslation(language, bios),
       snapshot.get("image"),
       snapshot.get("languages")
