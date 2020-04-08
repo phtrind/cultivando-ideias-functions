@@ -18,12 +18,18 @@ export default class AuthorRepository {
       language,
       snapshot.get("about")
     );
-    const content = new Content(
-      bioContent.data,
-      bioContent.language,
-      snapshot.get("languages")
-    );
+    const content: Content = {
+      data: bioContent.data,
+      language: bioContent.language,
+      availableLanguages: snapshot.get("languages"),
+    };
+    const author: Author = {
+      id: id,
+      name: name,
+      bio: content,
+      image: snapshot.get("image"),
+    };
 
-    return new Author(id, name, content, snapshot.get("image"));
+    return author;
   }
 }

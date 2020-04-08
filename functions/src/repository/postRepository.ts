@@ -19,15 +19,16 @@ export default class PostRepository {
     return snapshot.docs.map((x) => {
       const titles = x.get("titles") as Translation[];
       const summaries = x.get("summaries") as Translation[];
+      const postSummary: PostSummary = {
+        id: x.id,
+        title: TranslationService.getTranslation(language, titles).data,
+        author: x.get("author.name"),
+        content: TranslationService.getTranslation(language, summaries).data,
+        languages: x.get("languages"),
+        datetime: x.get("datetime").toDate(),
+      };
 
-      return new PostSummary(
-        x.id,
-        TranslationService.getTranslation(language, titles).data,
-        x.get("author.name"),
-        TranslationService.getTranslation(language, summaries).data,
-        x.get("languages"),
-        x.get("datetime").toDate()
-      );
+      return postSummary;
     });
   }
 
@@ -45,12 +46,19 @@ export default class PostRepository {
       snapshot.get("author.id"),
       language
     );
-    const content = new Content(
-      postContent.data,
-      postContent.language,
-      snapshot.get("languages"),
-      title.data
-    );
-    return new Post(id, author, content, snapshot.get("datetime").toDate());
+    const content: Content = {
+      data: postContent.data,
+      language: postContent.language,
+      availableLanguages: snapshot.get("languages"),
+      title: title.data,
+    };
+    const post: Post = {
+      id: id,
+      author: author,
+      content: content,
+      datetime: snapshot.get("datetime").toDate(),
+    };
+
+    return post;
   }
 }
