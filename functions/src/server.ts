@@ -1,7 +1,7 @@
 import * as express from "express";
 
 const cookieParser = require("cookie-parser")();
-const cors = require("cors")({ origin: true });
+const cors = require("cors")();
 const server = express();
 
 // Express middleware that validates Firebase ID Tokens passed in the Authorization HTTP header.
