@@ -5,6 +5,7 @@ import Translation from "../models/translation";
 import Post from "../models/post";
 import TranslationService from "../services/translationService";
 import AuthorRepository from "./authorRepository";
+import Content from "../models/content";
 
 export default class PostRepository {
   private readonly _firestore: admin.firestore.Firestore;
@@ -21,9 +22,9 @@ export default class PostRepository {
 
       return new PostSummary(
         x.id,
-        TranslationService.getTranslation(language, titles),
+        TranslationService.getTranslation(language, titles).data,
         x.get("author.name"),
-        TranslationService.getTranslation(language, summaries),
+        TranslationService.getTranslation(language, summaries).data,
         x.get("languages"),
         x.get("datetime").toDate()
       );
@@ -32,21 +33,24 @@ export default class PostRepository {
 
   async getPost(id: string, language: string): Promise<Post> {
     const snapshot = await this._firestore.collection("posts").doc(id).get();
-    const titles = snapshot.get("titles") as Translation[];
-    const contents = snapshot.get("contents") as Translation[];
-    const authorId = snapshot.get("author.id");
+    const title = TranslationService.getTranslation(
+      language,
+      snapshot.get("titles")
+    );
+    const postContent = TranslationService.getTranslation(
+      language,
+      snapshot.get("contents")
+    );
     const author = await new AuthorRepository(this._firestore).getPost(
-      authorId,
+      snapshot.get("author.id"),
       language
     );
-
-    return new Post(
-      id,
-      TranslationService.getTranslation(language, titles),
-      author,
-      TranslationService.getTranslation(language, contents),
+    const content = new Content(
+      postContent.data,
+      postContent.language,
       snapshot.get("languages"),
-      snapshot.get("datetime").toDate()
+      title.data
     );
+    return new Post(id, author, content, snapshot.get("datetime").toDate());
   }
 }

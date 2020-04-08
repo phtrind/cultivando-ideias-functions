@@ -5,7 +5,7 @@ export default class TranslationService {
   static getTranslation = (
     requestedLanguage: string,
     translations: Translation[]
-  ): string => {
+  ): Translation => {
     let language = TranslationService.defaultLanguage;
     if (requestedLanguage) {
       language = requestedLanguage;
@@ -14,8 +14,8 @@ export default class TranslationService {
       (x) => x.language === language
     );
     if (foundTranslation && foundTranslation.length > 0) {
-      return foundTranslation[0].data;
+      return foundTranslation[0];
     }
-    return translations[0].data;
+    return translations[0];
   };
 }

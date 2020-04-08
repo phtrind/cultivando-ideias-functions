@@ -1,23 +1,17 @@
+import Content from "./content";
+
 class Author {
   id: string;
   name: string;
-  bio: string;
+  bio: Content;
   image: string;
-  languages: string[];
 
-  constructor(
-    id: string,
-    name: string,
-    bio: string,
-    image: string,
-    languages: string[]
-  ) {
+  constructor(id: string, name: string, bio: Content, image: string) {
     this.id = id;
     this.name = name;
     this.bio = bio;
     this.bio = bio;
     this.image = image;
-    this.languages = languages;
   }
 }
 
