@@ -42,7 +42,7 @@ export default class PostRepository {
       language,
       snapshot.get("contents")
     );
-    const author = await new AuthorRepository(this._firestore).getPost(
+    const author = await new AuthorRepository(this._firestore).getAuthor(
       snapshot.get("author.id"),
       language
     );

@@ -63,6 +63,7 @@ server.use(cookieParser);
 server.use(validateFirebaseIdToken);
 
 server.use("/posts", require("./routes/posts"));
+server.use("/authors", require("./routes/authors"));
 
 server.get("*", (_, res) =>
   res.status(404).json({ success: false, data: "Endpoint not found" })
