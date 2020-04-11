@@ -14,11 +14,21 @@ export default class AuthorRepository {
 
   async getAuthorsCombo(): Promise<KeyValue[]> {
     const snapshot = await this._firestore.collection("authors").get();
-    return snapshot.docs.map((x) => {
+    const authors = snapshot.docs.map((x) => {
       return {
         key: x.id,
         value: x.get("name"),
       };
+    });
+
+    return authors.sort((a, b) => {
+      if (a.value < b.value) {
+        return -1;
+      }
+      if (a.value > b.value) {
+        return 1;
+      }
+      return 0;
     });
   }
 
