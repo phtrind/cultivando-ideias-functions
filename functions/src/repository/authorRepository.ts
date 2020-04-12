@@ -53,4 +53,9 @@ export default class AuthorRepository {
 
     return author;
   }
+
+  async getAuthorName(id: string): Promise<string> {
+    const snapshot = await this._firestore.collection("authors").doc(id).get();
+    return snapshot.get("name");
+  }
 }
