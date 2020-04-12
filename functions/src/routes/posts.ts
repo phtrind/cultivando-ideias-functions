@@ -1,5 +1,6 @@
 import PostRepository from "../repository/postRepository";
 import admin = require("firebase-admin");
+import NewPost from "../models/newPost";
 
 const router = require("express").Router();
 
@@ -24,6 +25,17 @@ router.get("/:id/:language", async (req: any, res: any) => {
     .getPost(id, language)
     .then((post) => {
       res.status(200).json(post).send();
+    })
+    .catch(() => res.status(500).send());
+});
+
+router.post("/", async (req: any, res: any) => {
+  const newPost = req.body as NewPost;
+  const repository = new PostRepository(firestore);
+  repository
+    .newPost(newPost)
+    .then((id) => {
+      res.status(200).json(id).send();
     })
     .catch(() => res.status(500).send());
 });

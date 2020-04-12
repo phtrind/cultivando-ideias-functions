@@ -6,6 +6,7 @@ import Post from "../models/post";
 import TranslationService from "../services/translationService";
 import AuthorRepository from "./authorRepository";
 import Content from "../models/content";
+import NewPost from "../models/newPost";
 
 export default class PostRepository {
   private readonly _firestore: admin.firestore.Firestore;
@@ -18,12 +19,10 @@ export default class PostRepository {
     const snapshot = await this._firestore.collection("posts").get();
     return snapshot.docs.map((x) => {
       const titles = x.get("titles") as Translation[];
-      const summaries = x.get("summaries") as Translation[];
       const postSummary: PostSummary = {
         id: x.id,
         title: TranslationService.getTranslation(language, titles).data,
         author: x.get("author.name"),
-        content: TranslationService.getTranslation(language, summaries).data,
         languages: x.get("languages"),
         datetime: x.get("datetime").toDate(),
       };
@@ -60,5 +59,43 @@ export default class PostRepository {
     };
 
     return post;
+  }
+
+  async newPost(newPost: NewPost): Promise<string> {
+    const authorName = await new AuthorRepository(
+      this._firestore
+    ).getAuthorName(newPost.author);
+    const author = {
+      id: newPost.author,
+      name: authorName,
+    };
+    const datetime = admin.firestore.Timestamp.now();
+    const languages: string[] = [];
+    const titles: Translation[] = [];
+    const contents: Translation[] = [];
+    const likes = 0;
+    const image = "";
+    newPost.contents.forEach((x) => {
+      languages.push(x.language);
+      titles.push({
+        data: x.title ?? "",
+        language: x.language,
+      });
+      contents.push({
+        data: x.data,
+        language: x.language,
+      });
+    });
+    const post = {
+      author,
+      datetime,
+      languages,
+      titles,
+      contents,
+      likes,
+      image,
+    };
+    const saved = await this._firestore.collection("posts").add(post);
+    return saved.id;
   }
 }
