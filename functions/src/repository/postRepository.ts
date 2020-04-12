@@ -19,10 +19,12 @@ export default class PostRepository {
     const snapshot = await this._firestore.collection("posts").get();
     return snapshot.docs.map((x) => {
       const titles = x.get("titles") as Translation[];
+      const summaries = x.get("summaries") as Translation[];
       const postSummary: PostSummary = {
         id: x.id,
         title: TranslationService.getTranslation(language, titles).data,
         author: x.get("author.name"),
+        content: TranslationService.getTranslation(language, summaries).data,
         languages: x.get("languages"),
         datetime: x.get("datetime").toDate(),
       };
@@ -73,6 +75,7 @@ export default class PostRepository {
     const languages: string[] = [];
     const titles: Translation[] = [];
     const contents: Translation[] = [];
+    const summaries: Translation[] = [];
     const likes = 0;
     const image = "";
     newPost.contents.forEach((x) => {
@@ -85,6 +88,10 @@ export default class PostRepository {
         data: x.data,
         language: x.language,
       });
+      summaries.push({
+        data: x.summary ?? "",
+        language: x.language,
+      });
     });
     const post = {
       author,
@@ -94,6 +101,7 @@ export default class PostRepository {
       contents,
       likes,
       image,
+      summaries,
     };
     const saved = await this._firestore.collection("posts").add(post);
     return saved.id;
