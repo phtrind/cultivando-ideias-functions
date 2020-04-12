@@ -12,7 +12,10 @@ router.get("/combo", async (_: any, res: any) => {
     .then((combo) => {
       res.status(200).json(combo).send();
     })
-    .catch((err) => res.status(500).json(err).send());
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send();
+    });
 });
 
 module.exports = router;

@@ -14,7 +14,10 @@ router.get("/summary/:language", async (req: any, res: any) => {
     .then((summary) => {
       res.status(200).json(summary).send();
     })
-    .catch(() => res.status(500).send());
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send();
+    });
 });
 
 router.get("/:id/:language", async (req: any, res: any) => {
@@ -26,7 +29,10 @@ router.get("/:id/:language", async (req: any, res: any) => {
     .then((post) => {
       res.status(200).json(post).send();
     })
-    .catch(() => res.status(500).send());
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send();
+    });
 });
 
 router.post("/", async (req: any, res: any) => {
@@ -37,7 +43,10 @@ router.post("/", async (req: any, res: any) => {
     .then((id) => {
       res.status(200).json(id).send();
     })
-    .catch(() => res.status(500).send());
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send();
+    });
 });
 
 module.exports = router;
