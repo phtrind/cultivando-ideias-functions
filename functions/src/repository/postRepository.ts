@@ -16,11 +16,14 @@ export default class PostRepository {
   }
 
   async getSummaries(language: string): Promise<PostSummary[]> {
-    const snapshot = await this._firestore.collection("posts").get();
+    const snapshot = await this._firestore
+      .collection("posts")
+      .orderBy("datetime", "desc")
+      .get();
     return snapshot.docs.map((x) => {
       const titles = x.get("titles") as Translation[];
       const summaries = x.get("summaries") as Translation[];
-      const postSummary: PostSummary = {
+      return {
         id: x.id,
         title: TranslationService.getTranslation(language, titles).data,
         author: x.get("author.name"),
@@ -28,8 +31,6 @@ export default class PostRepository {
         languages: x.get("languages"),
         datetime: x.get("datetime").toDate(),
       };
-
-      return postSummary;
     });
   }
 
